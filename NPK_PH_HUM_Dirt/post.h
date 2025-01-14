@@ -12,18 +12,21 @@ const char* endpoint = "/api/v1/soil/post"; // API endpoint
 
 WiFiClientSecure client;
 
-void wifiSetup() {
+void wifiSetup(int debugpinled) {
   // Connect to WiFi
   Serial.print("Connecting to WiFi");
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
+    digitalWrite(debugpinled, LOW);//
     delay(500);
     Serial.print(".\n");
+    digitalWrite(debugpinled, HIGH);//
   }
+  digitalWrite(debugpinled, HIGH);//
   Serial.println("\nConnected to WiFi");
 }
 
-void post_NPK_PH_Humidity(int N, int P, int K, float PH, float Humidity) {
+void post_NPK_PH_Humidity(int N, int P, int K, float PH, float Humidity, int debugpinled) {
   // Optional: Skip SSL certificate verification (not recommended for production)
   client.setInsecure();
 
@@ -67,4 +70,12 @@ void post_NPK_PH_Humidity(int N, int P, int K, float PH, float Humidity) {
   
   client.stop();
   Serial.println("Disconnected from server.\n");
+
+  digitalWrite(debugpinled, LOW);
+  delay(2000);
+  digitalWrite(debugpinled, HIGH);
+  delay(2000);
+  digitalWrite(debugpinled, LOW);
+  delay(2000);
+  digitalWrite(debugpinled, HIGH);
 }

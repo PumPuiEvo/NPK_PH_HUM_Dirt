@@ -50,7 +50,7 @@ void modbusSetup()
   Serial.println("Modbus Master Initialized");
 }
 
-struct npk_ph getNPK_PH() {
+struct npk_ph getNPK_PH(int debugpinled) {
   struct npk_ph npk_ph_result;
   uint8_t result;
   uint16_t startAddr = 0x0000;
@@ -86,10 +86,30 @@ struct npk_ph getNPK_PH() {
     // Serial.print("maybe nitro gen : ");
     // Serial.println(node.getResponseBuffer(30));
 
+    digitalWrite(debugpinled, LOW);
+    delay(500);
+    digitalWrite(debugpinled, HIGH);
+    delay(500);
+    digitalWrite(debugpinled, LOW);
+    delay(500);
+    digitalWrite(debugpinled, HIGH);
+
   } else {
     // Display error message if the request fails
     Serial.print("Modbus Error: ");
     Serial.println(result);
+
+    digitalWrite(debugpinled, LOW);
+    delay(500);
+    digitalWrite(debugpinled, HIGH);
+    delay(500);
+    digitalWrite(debugpinled, LOW);
+    delay(500);
+    digitalWrite(debugpinled, HIGH);
+    delay(500);
+    digitalWrite(debugpinled, LOW);
+    delay(500);
+    digitalWrite(debugpinled, HIGH);
   }
 
   return npk_ph_result;
