@@ -2,7 +2,7 @@
 
 // Pin definitions for MAX485 control
 #define MAX485_DE      D3  // Driver Enable pin
-#define MAX485_RE_NEG  D4  // Receiver Enable pin
+#define MAX485_RE_NEG  D2  // Receiver Enable pin
 
 // Instantiate ModbusMaster object
 ModbusMaster node;
