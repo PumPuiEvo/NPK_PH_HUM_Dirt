@@ -4,6 +4,13 @@
 #define MAX485_DE      D3  // Driver Enable pin
 #define MAX485_RE_NEG  D2  // Receiver Enable pin
 
+struct npk_ph {
+  int n = 0;
+  int p = 0;
+  int k = 0;
+  float ph = 0;
+};
+
 // Instantiate ModbusMaster object
 ModbusMaster node;
 
@@ -43,7 +50,8 @@ void modbusSetup()
   Serial.println("Modbus Master Initialized");
 }
 
-void getNPK_PH() {
+struct npk_ph getNPK_PH() {
+  struct npk_ph npk_ph_result;
   uint8_t result;
   uint16_t startAddr = 0x0000;
   uint16_t offsetAddr = 50;
@@ -70,12 +78,18 @@ void getNPK_PH() {
     Serial.printf("Potassium: %d mg/kg\n", data[6]);
     Serial.println("-------------------");
 
-    Serial.print("maybe nitro gen : ");
-    Serial.println(node.getResponseBuffer(30));
+    npk_ph_result.n = data[4];
+    npk_ph_result.p = data[5];
+    npk_ph_result.k = data[6];
+    npk_ph_result.ph = float(data[3])/10;
+    // Serial.print("maybe nitro gen : ");
+    // Serial.println(node.getResponseBuffer(30));
 
   } else {
     // Display error message if the request fails
     Serial.print("Modbus Error: ");
     Serial.println(result);
   }
+
+  return npk_ph_result;
 }
