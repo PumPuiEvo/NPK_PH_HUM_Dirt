@@ -7,7 +7,9 @@
 
 // Constants 
 const int hygrometer = A0;	//Hygrometer sensor analog pin output at pin A0 of Arduino
+const unsigned long interval = 60000; // Interval in milliseconds (60 seconds)
 
+unsigned long previousMillis = 0; // Store the last time data was sent
 float soilHumidity;
 struct npk_ph theNPK_PH;
 
@@ -32,9 +34,13 @@ void loop(){
 
   soilHumidity = getHydorMeter(hygrometer);
   Serial.printf("Soil humidity: %.2f%%\n", soilHumidity);
-  
-  post_NPK_PH_Humidity(theNPK_PH.n, theNPK_PH.p, theNPK_PH.k, theNPK_PH.ph, soilHumidity, pinLEDdebug);
 
+  unsigned long currentMillis = millis();
+  // Check if 60 seconds have passed
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis; // Update the last send time
+    post_NPK_PH_Humidity(theNPK_PH.n, theNPK_PH.p, theNPK_PH.k, theNPK_PH.ph, soilHumidity, pinLEDdebug);
+  }
   delay(5000);
 }
 
