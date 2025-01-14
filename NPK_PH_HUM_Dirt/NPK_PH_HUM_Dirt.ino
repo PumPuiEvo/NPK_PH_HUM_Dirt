@@ -15,7 +15,7 @@ void setup() {
   pinMode(hygrometer, INPUT);
   modbusSetup();
 
-  // wifiSetup();
+  wifiSetup();
 }
 
 void loop(){
@@ -30,14 +30,7 @@ void loop(){
   soilHumidity = getHydorMeter(hygrometer);
   Serial.printf("Soil humidity: %.2f%%\n", soilHumidity);
   
-  // int N, P, K;
-  // float PH, Humidity;
-  // N = 0;
-  // P = 0;
-  // K = 0;
-  // PH = 0;
-  // Humidity = 0;
-  // post_NPK_PH_Humidity(N, P, K, PH, Humidity);
+  post_NPK_PH_Humidity(theNPK_PH.n, theNPK_PH.p, theNPK_PH.k, theNPK_PH.ph, soilHumidity);
 
   delay(5000);
 }
