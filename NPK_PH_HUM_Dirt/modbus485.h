@@ -78,7 +78,8 @@ struct npk_ph getNPK_PH() {
     Serial.printf("Potassium: %d mg/kg\n", data[6]);
     Serial.println("-------------------");
 
-    npk_ph_result.n = data[4];
+    int predictiveNitogen = int(( 1.2 *data[5] + 0.8*data[6])/2);
+    npk_ph_result.n = predictiveNitogen > 1 ? predictiveNitogen : 0;
     npk_ph_result.p = data[5];
     npk_ph_result.k = data[6];
     npk_ph_result.ph = float(data[3])/10;
