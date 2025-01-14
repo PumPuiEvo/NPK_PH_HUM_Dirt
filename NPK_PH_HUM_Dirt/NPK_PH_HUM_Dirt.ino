@@ -43,13 +43,16 @@ const byte ph[] = {0x01,0x03, 0x00, 0x06, 0x00, 0x01, 0x64, 0x0b};//0x0B64
 // const byte test[] = {0x01,0x03, 0x00, 0x1e, 0x00, 0x01, 0x85, 0xc0}; //pota from web sumtec
 // const byte test[] = {0x01,0x03, 0x00, 0x1e, 0x00, 0x01, 0xb5, 0xcc}; // nitro from web sumtec
 // const byte test[] = {0x01,0x03, 0x00, 0x1e, 0x00, 0x01, 0xe4, 0x0c}; // phos from web sumtec
-const byte test_n[] = {0x01,0x03, 0x00, 0x1f, 0x00, 0x01, 0xb5, 0xcc};
+const byte test_phos[] = {0x01,0x03, 0x00, 0x1f, 0x00, 0x01, 0xb5, 0xcc};
+const byte test_pota[] = {0x01,0x03, 0x00, 0x20, 0x00, 0x01, 0x85, 0xc0};
+const byte test_nitro[] = {0x01,0x03, 0x00, 0x1e, 0x00, 0x01, 0xe4, 0x0c};
 
-const byte test_phos[] = {0x01,0x03, 0x00, 0x1e, 0x00, 0x01, 0x85, 0xc0};
+// const byte test_phos[] = {0x01,0x03, 0x00, 0x20, 0x00, 0x01, 0x85, 0xc0};
 // const byte nitro[] = {0x01,0x03, 0x00, 0x1e, 0x00, 0x01, 0xb5, 0xcc};
 // const byte pota[] = {0x01,0x03, 0x00, 0x1e, 0x00, 0x01, 0x85, 0xc0};
+const byte getall[] = {0x01,0x03, 0x00, 0x0e, 0x00, 0x03, 0x34, 0x04};
 
-byte values[11];
+byte values[20];
 SoftwareSerial mod(RO,DI);
  
 void setup() {
@@ -62,6 +65,11 @@ void setup() {
 }
  
 void loop() {
+
+  Serial.println("---------------"); 
+  // // get_all();
+  // Serial.println("---------------"); 
+
   byte val1, val2, val3, val4;
   val1 = nitrogen();
   delay(250);
@@ -72,33 +80,57 @@ void loop() {
   val4 = phydrogen();
   delay(250);
   
-  Serial.print("Nitrogen: ");
-  Serial.print(val1);
-  Serial.println(" mg/kg");
-  Serial.print("Phosphorous: ");
-  Serial.print(val2);
-  Serial.println(" mg/kg");
-  Serial.print("Potassium: ");
-  Serial.print(val3);
-  Serial.println(" mg/kg");
-  Serial.print("PH: ");
-  Serial.print(val4);
-  Serial.println("");
+  // Serial.print("Nitrogen: ");
+  // Serial.print(val1);
+  // Serial.println(" mg/kg");
+  // Serial.print("Phosphorous: ");
+  // Serial.print(val2);
+  // Serial.println(" mg/kg");
+  // Serial.print("Potassium: ");
+  // Serial.print(val3);
+  // Serial.println(" mg/kg");
+  // Serial.print("PH: ");
+  // Serial.print(val4);
+  // Serial.println("");
 
+
+  int delayget = 1000;
 
   byte valTest;
-  valTest = testByte();
-  delay(250);
-  Serial.print("test_n: ");
+  valTest = test_get_phos();
+  delay(delayget);
+  Serial.print("test_phos: ");
   Serial.println(valTest); 
 
-  Serial.print("\n"); 
+  val1 = nitrogen();
+  delay(250);
+  val2 = phosphorous();
+  delay(250);
+  val3 = potassium();
+  delay(250);
+  val4 = phydrogen();
+  delay(250);
 
   byte valTest2;
-  valTest2 = test_get_phos();
-  delay(250);
-  Serial.print("test_phos: ");
+  valTest2 = test_get_pota();
+  delay(delayget);
+  Serial.print("test_pota: ");
   Serial.println(valTest2); 
+
+  val1 = nitrogen();
+  delay(250);
+  val2 = phosphorous();
+  delay(250);
+  val3 = potassium();
+  delay(250);
+  val4 = phydrogen();
+  delay(250);
+
+  byte valTest3;
+  valTest3 = test_get_nitro();
+  delay(delayget);
+  Serial.print("test_nitro: ");
+  Serial.println(valTest3); 
 
   // temp = getByteNPK(phos);
   // delay(250);
@@ -116,14 +148,50 @@ void loop() {
  
 }
 
-byte testByte(){
+void get_all(){
   digitalWrite(DE,HIGH);
   digitalWrite(RE,HIGH);
   delay(10);
-  if(mod.write(test_n,sizeof(test_n))==8){
+  if(mod.write(getall,sizeof(getall))==8){
     digitalWrite(DE,LOW);
     digitalWrite(RE,LOW);
-    // delay(10);
+    // delay(1);
+    for(byte i=0;i<20;i++){
+    // Serial.print(mod.read(),HEX);
+    values[i] = mod.read();
+    Serial.printf("%XH ", values[i]);
+    }
+    Serial.println();
+  }
+}
+
+// byte testByte(){
+//   digitalWrite(DE,HIGH);
+//   digitalWrite(RE,HIGH);
+//   delay(10);
+//   if(mod.write(test_n,sizeof(test_n))==8){
+//     digitalWrite(DE,LOW);
+//     digitalWrite(RE,LOW);
+//     delay(1);
+//     for(byte i=0;i<7;i++){
+//     // Serial.print(mod.read(),HEX);
+//     values[i] = mod.read();
+//     Serial.printf("%XH ", values[i]);
+//     }
+//     Serial.println();
+//   }
+//   return values[4];
+// }
+
+byte test_get_phos(){
+  digitalWrite(DE,HIGH);
+  digitalWrite(RE,HIGH);
+  delay(10);
+
+  if(mod.write(test_phos,sizeof(test_phos))==8){
+    digitalWrite(DE,LOW);
+    digitalWrite(RE,LOW);
+    delay(1);
     for(byte i=0;i<7;i++){
     // Serial.print(mod.read(),HEX);
     values[i] = mod.read();
@@ -134,14 +202,34 @@ byte testByte(){
   return values[4];
 }
 
-byte test_get_phos(){
+byte test_get_pota(){
   digitalWrite(DE,HIGH);
   digitalWrite(RE,HIGH);
   delay(10);
-  if(mod.write(test_phos,sizeof(test_phos))==8){
+
+  if(mod.write(test_pota,sizeof(test_pota))==8){
     digitalWrite(DE,LOW);
     digitalWrite(RE,LOW);
-    // delay(10);
+    delay(1);
+    for(byte i=0;i<7;i++){
+    // Serial.print(mod.read(),HEX);
+    values[i] = mod.read();
+    Serial.printf("%XH ", values[i]);
+    }
+    Serial.println();
+  }
+  return values[4];
+}
+
+byte test_get_nitro(){
+  digitalWrite(DE,HIGH);
+  digitalWrite(RE,HIGH);
+  delay(10);
+
+  if(mod.write(test_nitro,sizeof(test_nitro))==8){
+    digitalWrite(DE,LOW);
+    digitalWrite(RE,LOW);
+    delay(1);
     for(byte i=0;i<7;i++){
     // Serial.print(mod.read(),HEX);
     values[i] = mod.read();
