@@ -2,8 +2,8 @@
 #include <WiFiClientSecure.h>
 
 // WiFi Credentials
-const char* ssid = "pumpui";
-const char* password = "14325678";
+const char* ssid = "RD_snap_project";
+const char* password = "0650941951";
 
 // Server Details
 const char* server = "43.228.86.203"; // Server IP
